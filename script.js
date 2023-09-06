@@ -5,7 +5,7 @@ const rows = 8;
 const columns = 10;
 let minesCount = 10;
 let mines = [];
-let clickCount = 0;
+
 
 function initializeBoard() {
   for (let i = 1; i <= rows; i++) {
@@ -39,21 +39,17 @@ function setMines() {
 
 function handleCellClick() {
   this.className.includes("setFlag") ? this.classList.remove("setFlag") : null;
-  clickCount++;
-  if (!endGame()) {
     const cellLocation = this.id;
     if (mines.includes(cellLocation)) {
       revealAllMines();
     } else {
       this.classList.add("cellClicked");
+      endGame()
       const nearbyMines = countMinesNearby(this, cellLocation);
       if (nearbyMines === 0) {
         openEmptyCells(this, cellLocation);
       }
     }
-  } else {
-    return;
-  }
 }
 function countMinesNearby(element, cellLocation) {
   let countMinesNearby = 0;
@@ -95,6 +91,7 @@ function countMinesNearby(element, cellLocation) {
 function openEmptyCells(element, cellLocation) {
   const [row, col] = cellLocation.split("-").map(Number);
   const visited = new Set();
+
 
   function explore(row, col) {
     if (row < 1 || row > rows || col < 1 || col > columns) {
@@ -154,7 +151,7 @@ function handleCellflag(e) {
 }
 
 function resetGame() {
-  clickCount = 0;
+  openedCount = 0;
   board.innerHTML = "";
   board.style.pointerEvents = "auto";
   mines = [];
@@ -164,13 +161,21 @@ function resetGame() {
 
 function endGame() {
   let numClick = rows * columns - minesCount;
-  if (clickCount === numClick) {
-    alert("you won ");
-    return true;
-  } else {
-    return false;
+  let openedCount = 0;
+  for (let i = 1; i <= rows; i++) {
+    for (let j = 1; j <= columns; j++) {
+      const cell = document.getElementById(`${i}-${j}`);
+      if (cell.classList.contains("cellClicked")) {
+        openedCount++;
+      }
+    }
+  }
+
+  if (openedCount === numClick) {
+    popup.style.display = 'flex';
   }
 }
+
 
 setMines();
 initializeBoard();
