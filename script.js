@@ -1,9 +1,9 @@
 const board = document.getElementById("board");
 const resetButton = (document.getElementById("resetButton").onclick =
   resetGame);
-const rows = 8;
-const columns = 10;
-let minesCount = 10;
+const rows = 11;
+const columns = 11;
+let minesCount = 30;
 let mines = [];
 
 
@@ -44,11 +44,15 @@ function handleCellClick() {
       revealAllMines();
     } else {
       this.classList.add("cellClicked");
+      for (let i = 0; i < 15 ;i++) {
+        console.log(mines[i]);
+      }
+      
       endGame()
       const nearbyMines = countMinesNearby(this, cellLocation);
-      if (nearbyMines === 0) {
-        openEmptyCells(this, cellLocation);
-      }
+      // if (nearbyMines === 0) {
+      //   openEmptyCells(this, cellLocation);
+      // }
     }
 }
 function countMinesNearby(element, cellLocation) {
