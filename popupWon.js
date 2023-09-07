@@ -1,10 +1,10 @@
-const popup = document.getElementById('popup');
+const popupWon = document.getElementById('popup');
 const showPopupButton = document.getElementById('showPopup');
 const closePopupButton = document.getElementById('closePopup');
 
 
 function closePopup() {
-    popup.style.display = 'none';
+    popupWon.style.display = 'none';
     resetGame()
 }
 

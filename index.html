@@ -1,25 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Minesweeper</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="minesweeper">
-        <h1>Minesweeper</h1>
-        <div class="board" id="board"></div>
-        <button class="reset-button" id="resetButton">Reset</button>
-    </div>
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <h1>Congratulations, you won</h1>
-            <button id="closePopup">play again</button>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <h1>Minesweeper Game</h1>
+      </nav>
+    </header>
+    <main>
+      <div class="container">
+        <div class="minesweeper">
+          <h1>Minesweeper</h1>
+          <div class="board" id="board"></div>
+          <button class="reset-button" id="resetButton">Reset</button>
         </div>
-    </div>
+      </div>
+      <div id="popup" class="popup">
+        <div class="popup-content">
+          <h1>Congratulations, you won</h1>
+          <button id="closePopup">play again</button>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <p>copyright ©2023 AL-Droubi</p>
+      <p>made with 🖤 by Abdalrahman AL-Droubi</p>
+      <img src="./assets/settingsIcon.svg" alt="" id="settingsIcon"/>
+      <div id="settingsModal" class="modal">
+        <div class="modal-content">
+          <span id="closeModal" class="close">&times;</span>
+          <h2>Game Settings</h2>
+          <form id="settingsForm">
+            <label for="rows">Number of Rows:</label>
+            <input type="number" id="rows" name="rows" min="5" max="30" required><br>
+            
+            <label for="columns">Number of Columns:</label>
+            <input type="number" id="columns" name="columns" min="5" max="30" required><br>
+            
+            <label for="mines">Number of Mines:</label>
+            <input type="number" id="mines" name="mines" min="4" max= required>
+            <p style="font-size: small;">*max mines = num rows * num columns</p><br>
+            
+            <button type="submit" id="startGameButton">Start Game</button>
+          </form>
+        </div>
+      </div>
+    </footer>
     <script src="script.js"></script>
-    <script src="popup.js"></script>
-
-</body>
+    <script src="popupWon.js"></script>
+    <script src="GameSettings.js"></script>
+  </body>
 </html>

@@ -1,11 +1,10 @@
 const board = document.getElementById("board");
 const resetButton = (document.getElementById("resetButton").onclick =
   resetGame);
-const rows = 11;
-const columns = 11;
-let minesCount = 30;
+let rows = 10;
+let columns = 15;
+let minesCount = 25;
 let mines = [];
-
 
 function initializeBoard() {
   for (let i = 1; i <= rows; i++) {
@@ -38,22 +37,18 @@ function setMines() {
 }
 
 function handleCellClick() {
-  this.className.includes("setFlag") ? this.classList.remove("setFlag") : null;
-    const cellLocation = this.id;
-    if (mines.includes(cellLocation)) {
-      revealAllMines();
-    } else {
-      this.classList.add("cellClicked");
-      for (let i = 0; i < 15 ;i++) {
-        console.log(mines[i]);
-      }
-      
-      endGame()
-      const nearbyMines = countMinesNearby(this, cellLocation);
-      // if (nearbyMines === 0) {
-      //   openEmptyCells(this, cellLocation);
-      // }
+  if (this.className.includes("setFlag")) return;
+  const cellLocation = this.id;
+  if (mines.includes(cellLocation)) {
+    revealAllMines();
+  } else {
+    this.classList.add("cellClicked");
+    endGame();
+    const nearbyMines = countMinesNearby(this, cellLocation);
+    if (nearbyMines === 0) {
+      openEmptyCells(this, cellLocation);
     }
+  }
 }
 function countMinesNearby(element, cellLocation) {
   let countMinesNearby = 0;
@@ -68,8 +63,7 @@ function countMinesNearby(element, cellLocation) {
     [1, 0],
     [1, 1],
   ];
-
-  for (const [dx, dy] of directions) {
+  directions.map(([dx, dy]) => {
     const adjacentRow = row + dx;
     const adjacentCol = col + dy;
 
@@ -86,7 +80,7 @@ function countMinesNearby(element, cellLocation) {
         countMinesNearby++;
       }
     }
-  }
+  });
 
   element.innerHTML = countMinesNearby == 0 ? "" : countMinesNearby;
   return countMinesNearby;
@@ -95,7 +89,6 @@ function countMinesNearby(element, cellLocation) {
 function openEmptyCells(element, cellLocation) {
   const [row, col] = cellLocation.split("-").map(Number);
   const visited = new Set();
-
 
   function explore(row, col) {
     if (row < 1 || row > rows || col < 1 || col > columns) {
@@ -107,25 +100,28 @@ function openEmptyCells(element, cellLocation) {
 
     if (!visited.has(currentCellLocation)) {
       visited.add(currentCellLocation);
-
       if (!mines.includes(currentCellLocation)) {
-        currentCell.classList.add("cellClicked");
-        const nearbyMines = countMinesNearby(currentCell, currentCellLocation);
+        if (!currentCell.className.includes("setFlag")) {
+          currentCell.classList.add("cellClicked");
+          const nearbyMines = countMinesNearby(
+            currentCell,
+            currentCellLocation
+          );
 
-        if (nearbyMines === 0) {
-          const directions = [
-            [-1, -1],
-            [-1, 0],
-            [-1, 1],
-            [0, -1],
-            [0, 1],
-            [1, -1],
-            [1, 0],
-            [1, 1],
-          ];
-
-          for (const [dx, dy] of directions) {
-            explore(row + dx, col + dy);
+          if (nearbyMines === 0) {
+            const directions = [
+              [-1, -1],
+              [-1, 0],
+              [-1, 1],
+              [0, -1],
+              [0, 1],
+              [1, -1],
+              [1, 0],
+              [1, 1],
+            ];
+            directions.map(([dx, dy]) => {
+              explore(row + dx, col + dy);
+            });
           }
         }
       }
@@ -152,10 +148,10 @@ function handleCellflag(e) {
   ) {
     this.classList.toggle("setFlag");
   }
+  endGame();
 }
 
 function resetGame() {
-  openedCount = 0;
   board.innerHTML = "";
   board.style.pointerEvents = "auto";
   mines = [];
@@ -166,6 +162,7 @@ function resetGame() {
 function endGame() {
   let numClick = rows * columns - minesCount;
   let openedCount = 0;
+  let flagCount = 0;
   for (let i = 1; i <= rows; i++) {
     for (let j = 1; j <= columns; j++) {
       const cell = document.getElementById(`${i}-${j}`);
@@ -174,12 +171,18 @@ function endGame() {
       }
     }
   }
-
-  if (openedCount === numClick) {
-    popup.style.display = 'flex';
+  for (let i = 1; i <= rows; i++) {
+    for (let j = 1; j <= columns; j++) {
+      const cell = document.getElementById(`${i}-${j}`);
+      if (cell.classList.contains("setFlag")) {
+        flagCount++;
+      }
+    }
+  }
+  if (openedCount === numClick && flagCount === minesCount) {
+    popupWon.style.display = "flex";
   }
 }
-
 
 setMines();
 initializeBoard();
